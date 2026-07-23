@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBA Execution OS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        osDark: '#0f172a',
+                        osCard: '#1e293b',
+                        osAccent: '#38bdf8',
+                        osSuccess: '#22c55e',
+                        osDanger: '#ef4444',
+                        osWarning: '#f59e0b'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar for horizontal lists */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-black text-slate-200 font-sans antialiased selection:bg-osAccent selection:text-white">
+
+<div class="max-w-md mx-auto bg-osDark min-h-screen relative shadow-2xl border-x border-slate-800 overflow-hidden flex flex-col">
+
+    <!-- App Header -->
+    <header class="px-5 pt-10 pb-4 bg-osDark/80 backdrop-blur-md sticky top-0 z-20 border-b border-slate-800">
+        <div class="flex justify-between items-center">
+            <div>
+                <p class="text-xs text-slate-400 font-semibold tracking-wider uppercase mb-1">MBA Semester I</p>
+                <h1 class="text-2xl font-bold text-white tracking-tight">Execution OS</h1>
+            </div>
+            <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center border border-slate-700">
+                <i class="fa-solid fa-user-astronaut text-slate-300"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area (Scrollable) -->
+    <main class="flex-1 overflow-y-auto pb-24" id="main-view">
+
+        <!-- HORIZON 1: TACTICAL (The "Now") -->
+        <section class="p-5">
+            <div class="flex items-center gap-2 mb-4">
+                <i class="fa-solid fa-bolt text-osAccent"></i>
+                <h2 class="text-sm font-bold text-slate-300 uppercase tracking-widest">Tactical Horizon</h2>
+            </div>
+
+            <!-- GCal Sync / Next Action -->
+            <div class="bg-gradient-to-br from-osCard to-slate-800 p-4 rounded-2xl border border-slate-700/50 mb-5 shadow-lg relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-osAccent/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-xs font-semibold text-osAccent bg-osAccent/10 px-2 py-1 rounded-md">Live (GCal Sync)</span>
+                    <span class="text-xs text-slate-400"><i class="fa-regular fa-clock mr-1"></i> 10:30 AM</span>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-1">Financial Reporting (FRA)</h3>
+                <p class="text-sm text-slate-400 mb-4">Room 402 • Prof. Sharma</p>
+
+                <!-- The Override Action -->
+                <div class="flex gap-2">
+                    <button class="flex-1 bg-slate-700/50 hover:bg-slate-700 text-slate-300 py-2 rounded-xl text-sm font-semibold border border-slate-600 transition-colors">
+                        <i class="fa-solid fa-check mr-2 text-osSuccess"></i> Auto-Logged
+                    </button>
+                    <button class="flex-1 bg-red-900/20 hover:bg-red-900/40 text-red-400 py-2 rounded-xl text-sm font-semibold border border-red-900/50 transition-colors">
+                        <i class="fa-solid fa-person-walking-arrow-right mr-2"></i> Spend Bunk
+                    </button>
+                </div>
+            </div>
+
+            <!-- The Buffer Economy Vault -->
+            <div class="mb-5">
+                <h3 class="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-3">Buffer Vault (Tokens)</h3>
+                <div class="flex gap-3 overflow-x-auto hide-scrollbar pb-2">
+                    <!-- High Buffer -->
+                    <div class="min-w-[100px] bg-osCard rounded-xl p-3 border border-slate-700 flex flex-col items-center justify-center relative">
+                        <div class="absolute top-2 right-2 w-2 h-2 rounded-full bg-osSuccess"></div>
+                        <span class="text-2xl font-bold text-white">9</span>
+                        <span class="text-xs text-slate-400 mt-1 font-mono">FRA</span>
+                    </div>
+                    <!-- Medium Buffer -->
+                    <div class="min-w-[100px] bg-osCard rounded-xl p-3 border border-slate-700 flex flex-col items-center justify-center relative">
+                        <div class="absolute top-2 right-2 w-2 h-2 rounded-full bg-osAccent"></div>
+                        <span class="text-2xl font-bold text-white">6</span>
+                        <span class="text-xs text-slate-400 mt-1 font-mono">OB</span>
+                    </div>
+                    <!-- Low Buffer Danger -->
+                    <div class="min-w-[100px] bg-red-900/10 rounded-xl p-3 border border-red-900/30 flex flex-col items-center justify-center relative">
+                        <div class="absolute top-2 right-2 w-2 h-2 rounded-full bg-osDanger animate-pulse"></div>
+                        <span class="text-2xl font-bold text-red-400">1</span>
+                        <span class="text-xs text-red-400/70 mt-1 font-mono">HAW</span>
+                    </div>
+                     <!-- Medium Buffer -->
+                     <div class="min-w-[100px] bg-osCard rounded-xl p-3 border border-slate-700 flex flex-col items-center justify-center relative">
+                        <div class="absolute top-2 right-2 w-2 h-2 rounded-full bg-osAccent"></div>
+                        <span class="text-2xl font-bold text-white">6</span>
+                        <span class="text-xs text-slate-400 mt-1 font-mono">ME</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Urgent Tasks (NPTEL) -->
+            <div>
+                <h3 class="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-3">NPTEL Execution</h3>
+                <div class="space-y-2">
+                    <div class="bg-osCard p-3 rounded-xl border border-slate-700 flex items-center justify-between opacity-50">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-circle-check text-osSuccess"></i>
+                            <span class="text-sm line-through">Nuclear Energy Week 2</span>
+                        </div>
+                    </div>
+                    <div class="bg-osCard p-3 rounded-xl border border-osWarning/30 border-l-2 border-l-osWarning flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-regular fa-circle text-slate-500"></i>
+                            <span class="text-sm text-white">GHG Emissions Assignment</span>
+                        </div>
+                        <span class="text-xs text-osWarning bg-osWarning/10 px-2 py-1 rounded">Due tmrw</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="h-px bg-slate-800 mx-5 my-2"></div>
+
+        <!-- HORIZON 2: STRATEGIC (The "Horizon") -->
+        <section class="p-5">
+            <div class="flex items-center gap-2 mb-4">
+                <i class="fa-solid fa-chess-knight text-purple-400"></i>
+                <h2 class="text-sm font-bold text-slate-300 uppercase tracking-widest">Strategic Horizon</h2>
+            </div>
+
+            <!-- Paper 1: Nuclear -->
+            <div class="bg-osCard p-4 rounded-2xl border border-slate-700 mb-4 cursor-pointer hover:border-slate-500 transition-colors">
+                <div class="flex justify-between items-center mb-3">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-atom text-slate-400"></i>
+                        <h3 class="text-sm font-bold text-white">Paper 1: Nuclear & SMRs</h3>
+                    </div>
+                    <span class="text-xs text-slate-400">Ch 2/5</span>
+                </div>
+                <div class="w-full bg-slate-800 rounded-full h-1.5 mb-2">
+                    <div class="bg-purple-500 h-1.5 rounded-full" style="width: 40%"></div>
+                </div>
+                <p class="text-xs text-slate-400 mt-2"><span class="text-white font-semibold">Current Block:</span> Drafting Demand Catalyst (Data Centers).</p>
+            </div>
+
+            <!-- Paper 2: MSME (With Field Mode Link) -->
+            <div class="bg-osCard p-4 rounded-2xl border border-slate-700 mb-4 relative overflow-hidden group">
+                <div class="flex justify-between items-center mb-3">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-industry text-slate-400"></i>
+                        <h3 class="text-sm font-bold text-white">Paper 2: MSME Grid</h3>
+                    </div>
+                    <span class="text-xs text-osAccent bg-osAccent/10 px-2 py-1 rounded">Active Collection</span>
+                </div>
+                <div class="flex items-center gap-4 mb-3">
+                    <div>
+                        <p class="text-2xl font-bold text-white">3<span class="text-sm text-slate-500 font-normal">/5</span></p>
+                        <p class="text-[10px] text-slate-400 uppercase tracking-wide">Factories Logged</p>
+                    </div>
+                    <div class="h-8 w-px bg-slate-700"></div>
+                    <div>
+                        <p class="text-2xl font-bold text-white">12</p>
+                        <p class="text-[10px] text-slate-400 uppercase tracking-wide">Sag Events</p>
+                    </div>
+                </div>
+                <!-- Field Mode Launch Button -->
+                <button onclick="toggleFieldMode()" class="w-full bg-osAccent/10 hover:bg-osAccent/20 text-osAccent py-2 rounded-xl text-sm font-semibold border border-osAccent/20 transition-colors flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-satellite-dish"></i> Launch Field Logger
+                </button>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Field Mode Modal (Hidden by default) -->
+    <div id="field-mode-view" class="absolute inset-0 bg-osDark z-50 transform translate-y-full transition-transform duration-300 flex flex-col">
+        <header class="px-5 pt-10 pb-4 bg-slate-900 border-b border-slate-800 flex justify-between items-center">
+            <div>
+                <span class="text-xs text-osAccent font-semibold tracking-wider uppercase mb-1 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-osAccent animate-pulse"></span> Offline Ready
+                </span>
+                <h1 class="text-xl font-bold text-white tracking-tight">GIDC Event Logger</h1>
+            </div>
+            <button onclick="toggleFieldMode()" class="w-10 h-10 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-5">
+            <div class="bg-osCard p-5 rounded-2xl border border-slate-700 shadow-xl space-y-5">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase mb-2">Location / Factory ID</label>
+                    <select class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white focus:outline-none focus:border-osAccent">
+                        <option>Naroda GIDC - Unit A (Pharma)</option>
+                        <option>Vatva GIDC - Unit B (Chemicals)</option>
+                        <option>Kathwada GIDC - Unit C (Food)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase mb-2">Reset Latency (Minutes)</label>
+                    <input type="number" placeholder="e.g. 45" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white focus:outline-none focus:border-osAccent font-mono text-lg">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase mb-2">Material Scrap Cost (₹)</label>
+                    <input type="number" placeholder="e.g. 15000" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white focus:outline-none focus:border-osAccent font-mono text-lg">
+                </div>
+                <button onclick="submitLog()" class="w-full bg-osAccent hover:bg-sky-400 text-slate-900 py-4 rounded-xl text-base font-bold transition-colors shadow-lg shadow-osAccent/20 flex items-center justify-center gap-2 mt-4">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Save & Cache Log
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bg-osCard border-t border-slate-800 p-4 sticky bottom-0 z-20">
+        <ul class="flex justify-around items-center text-slate-500">
+            <li class="flex flex-col items-center gap-1 text-osAccent cursor-pointer">
+                <i class="fa-solid fa-border-all text-xl"></i>
+                <span class="text-[10px] font-semibold">OS</span>
+            </li>
+            <li class="flex flex-col items-center gap-1 hover:text-slate-300 cursor-pointer transition-colors">
+                <i class="fa-solid fa-graduation-cap text-xl"></i>
+                <span class="text-[10px] font-semibold">Academics</span>
+            </li>
+            <li class="flex flex-col items-center gap-1 hover:text-slate-300 cursor-pointer transition-colors">
+                <i class="fa-solid fa-microchip text-xl"></i>
+                <span class="text-[10px] font-semibold">Twin</span>
+            </li>
+        </ul>
+    </nav>
+
+</div>
+
+<script>
+    function toggleFieldMode() {
+        const fieldView = document.getElementById('field-mode-view');
+        if (fieldView.classList.contains('translate-y-full')) {
+            fieldView.classList.remove('translate-y-full');
+            fieldView.classList.add('translate-y-0');
+        } else {
+            fieldView.classList.add('translate-y-full');
+            fieldView.classList.remove('translate-y-0');
+        }
+    }
+
+    function submitLog() {
+        const btn = document.querySelector('button[onclick="submitLog()"]');
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Saved Offline';
+        btn.classList.replace('bg-osAccent', 'bg-osSuccess');
+        btn.classList.replace('text-slate-900', 'text-white');
+
+        setTimeout(() => {
+            toggleFieldMode();
+            setTimeout(() => {
+                btn.innerHTML = originalContent;
+                btn.classList.replace('bg-osSuccess', 'bg-osAccent');
+                btn.classList.replace('text-white', 'text-slate-900');
+                // Clear inputs in a real app here
+            }, 300);
+        }, 1000);
+    }
+</script>
+
+</body>
+</html>
