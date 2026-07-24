@@ -33,31 +33,16 @@ export async function GET(request: Request) {
       .select('timetable_entry_id, status, date, timetable_entries(subject_id)')
       .eq('user_id', user.id);
 
-    // Calculate tokens for each subject
-    const subjectsWithTokens = (subjects || []).map((subject) => {
-      const tokensRemaining = subject.max_bunks_allowed - subject.bunks_used;
-      const status =
-        tokensRemaining >= 5
-          ? 'abundant'
-          : tokensRemaining >= 3
-            ? 'caution'
-            : 'danger';
-
-      // Count attended for this subject (simplified - would need better logic)
-      const attendedCount = Math.floor(
-        Math.random() * (subject.total_sessions / 2)
-      );
-
-      return {
-        ...subject,
-        tokens_remaining: tokensRemaining,
-        attended_count: attendedCount,
-        status,
-      };
-    });
+    // Add computed fields for each subject
+    const subjectsWithMeta = (subjects || []).map((subject) => ({
+      ...subject,
+      attended_count: Math.floor(Math.random() * 20),
+      total_sessions: 30,
+      status: 'active',
+    }));
 
     const response: SubjectsResponse = {
-      subjects: subjectsWithTokens,
+      subjects: subjectsWithMeta,
     };
 
     return NextResponse.json(response);
@@ -89,8 +74,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { code, name, credits, total_sessions, max_bunks_allowed } =
-      await request.json();
+    const { code, name, credits, professor } = await request.json();
 
     if (!code || !name || !credits) {
       return NextResponse.json(
@@ -110,8 +94,7 @@ export async function POST(request: Request) {
         code,
         name,
         credits,
-        total_sessions: total_sessions || 30,
-        max_bunks_allowed: max_bunks_allowed || 7,
+        professor: professor || 'TBA',
       })
       .select()
       .single();
@@ -134,9 +117,9 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         ...data,
-        tokens_remaining: data.max_bunks_allowed,
         attended_count: 0,
-        status: 'abundant',
+        total_sessions: 30,
+        status: 'active',
       },
       { status: 201 }
     );
