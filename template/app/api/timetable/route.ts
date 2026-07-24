@@ -22,8 +22,8 @@ export async function GET(request: Request) {
     const week = searchParams.get('week');
     const subjectId = searchParams.get('subject_id');
 
-    let query = supabase
-      .from('timetable_entries')
+    let query = (supabase
+      .from('timetable_entries') as any)
       .select(
         `
         id,
@@ -55,9 +55,9 @@ export async function GET(request: Request) {
       query = query.eq('subject_id', subjectId);
     }
 
-    const { data: entries, error } = await query.order('week', {
+    const { data: entries, error } = (await query.order('week', {
       ascending: true,
-    });
+    })) as any;
 
     if (error) {
       throw error;

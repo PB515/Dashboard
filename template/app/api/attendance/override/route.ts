@@ -42,12 +42,12 @@ export async function POST(request: Request) {
     }
 
     // Get timetable entry
-    const { data: entry, error: entryError } = await supabase
+    const { data: entry, error: entryError } = (await supabase
       .from('timetable_entries')
       .select('id, subject_id, week, day_of_week, session, time_slot')
       .eq('id', timetable_entry_id)
       .eq('user_id', user.id)
-      .single();
+      .single()) as any;
 
     if (entryError || !entry) {
       return NextResponse.json(

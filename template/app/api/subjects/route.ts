@@ -17,21 +17,21 @@ export async function GET(request: Request) {
   }
 
   try {
-    const { data: subjects, error: subjectsError } = await supabase
+    const { data: subjects, error: subjectsError } = (await supabase
       .from('subjects')
       .select('*')
       .eq('user_id', user.id)
-      .order('code', { ascending: true });
+      .order('code', { ascending: true })) as any;
 
     if (subjectsError) {
       throw subjectsError;
     }
 
     // Fetch attendance logs for all subjects
-    const { data: attendanceLogs } = await supabase
+    const { data: attendanceLogs } = (await supabase
       .from('attendance_logs')
-      .select('timetable_entry_id, status, date, timetable_entries(subject_id)')
-      .eq('user_id', user.id);
+      .select('timetable_entry_id, status, marked_at')
+      .eq('user_id', user.id)) as any;
 
     // Calculate tokens for each subject
     const subjectsWithTokens = (subjects || []).map((subject) => {
@@ -100,7 +100,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { data, error } = await supabase
+    const { data, error } = (await supabase
       .from('subjects')
       .insert({
         id: `${code.toLowerCase()}-${Date.now()}`,
@@ -113,7 +113,7 @@ export async function POST(request: Request) {
         max_bunks_allowed: max_bunks_allowed || 7,
       })
       .select()
-      .single();
+      .single()) as any;
 
     if (error) {
       if (error.code === '23505') {
