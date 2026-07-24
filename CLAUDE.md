@@ -10,11 +10,11 @@ A mobile-first Progressive Web App (PWA) for MBA Semester I students that automa
 
 ## Current status
 
-- **Phase:** 0 of 5 — Setup (site cloned from IDP, docs placed, ready to spec)
-- **Last completed:** Cloned from IDP via git archive, initialized independent git repo, placed PRD + HTML reference in docs/, filled CLAUDE.md template
-- **Next up:** Recommend next step (discovery skill or doc-gen-master) based on brief clarification
-- **Last commit:** (none yet — awaiting phase 0 completion)
-- **Resume note:** Site is an education/productivity app with offline-first PWA requirements. The UI mockup is a starting reference; design system tokens must be customized. Database schema defined in PRD; auth + RLS strategy TBD (recommend discovery or brief review first).
+- **Phase:** 0 of 5 — COMPLETE (discovery locked, all info consolidated)
+- **Last completed:** Discovery brief finalized + system architecture documented. All 5 sections defined (attendance, notes, research, artifacts, NPTEL). Craft tier: Signature. Ready for doc-gen-master.
+- **Next up:** Run doc-gen-master to generate full specification (docs 01-11)
+- **Last commit:** `4f392d6` — Phase 0 Complete (discovery brief + system architecture locked)
+- **Resume note:** Discovery complete in `docs/discovery-brief.md` + architecture in `docs/system-architecture.md`. This is a personal productivity PWA (single user, you). Google Calendar sync for auto-logging attendance (opt-out model). 5 sections: attendance, notes, research, artifacts, NPTEL. Craft tier Signature. Ready to start Phase 1 build.
 
 ## Stack
 
@@ -46,12 +46,18 @@ Tokens only — no hardcoded hex · secrets in `.env.local` only · no new/upgra
 
 *Newest last. One entry per phase: what was built, what was verified, any deviation.*
 
-### Phase 0 — Setup — IN PROGRESS
-- Cloned IDP via `git archive HEAD | tar -x` (excludes node_modules, build artifacts, .env.local).
-- Initialized as independent git repo (`git init -b main`, user config set).
-- Placed site info in `docs/`: `prd.md` (5-section PRD from client), `ui-reference.html` (Tailwind-based mockup).
-- Filled CLAUDE.md from template with real decisions + stack info.
-- **Next:** npm run setup (template install + root tooling) + initial green build check.
+### Phase 0 — Setup & Discovery — DONE
+- ✓ Cloned IDP via `git archive HEAD | tar -x` (excludes node_modules, build artifacts)
+- ✓ Initialized as independent git repo (`git init -b main`, user configured)
+- ✓ Placed site info in `docs/`: `prd.md`, `ui-reference.html`, `faculty.csv`, `timetable.csv`
+- ✓ Ran discovery: captured all 5 sections (attendance, notes, research, artifacts, NPTEL)
+- ✓ Locked craft tier: **Signature** (dark theme, smooth micro-interactions, memory cues for motivation)
+- ✓ Finalized system architecture: PWA + GCal webhook + Supabase RLS + offline Service Worker
+- ✓ Consolidated all info into `docs/discovery-brief.md` + `docs/system-architecture.md`
+- ✓ npm run setup: green (root + template installed, TypeScript check clean)
+- ✓ Commits: `ef897a8` (setup), `4f392d6` (discovery locked)
+- **Verify:** All docs present, git clean, ready for Phase 1
+- **Next:** doc-gen-master to generate full specification
 
 - **`.claude/skills/motion/SKILL.md`** — authored from spec; the original could not be recovered. Checked the 4 source-site repos' default branches (`E-com`, `Tuition-Site`, `Hingulapuran`, `Purven-Bhavsar`, `portfolio-site`, `Showcase`) on 2026-07-09 — `frontend-design` and `taste-skill` exist in the builds that have `.claude/skills/`, but no `motion/` skill was ever committed to any of them. Treating the reconstruction as the permanent version; not re-opening unless a private repo or non-default branch surfaces one.
 - **`docs/retros/`** — Patel CA & Inspire Academy retros missing (evidence only, never shipped).
