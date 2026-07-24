@@ -116,31 +116,64 @@ export default async function Home() {
 
         {/* Token Vault */}
         <div className="rounded-lg border border-text-secondary border-opacity-20 bg-surface-raised p-6">
-          <h2 className="mb-4 text-lg font-semibold">Buffer Vault</h2>
-          <div className="space-y-3">
+          <div className="mb-4">
+            <h2 className="text-lg font-semibold">🔐 Buffer Vault</h2>
+            <p className="text-xs text-text-secondary mt-1">
+              ⚡ Tokens = strategic bunks. Green = plenty, Yellow = caution, Red = none left.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {dashboard.token_vault.map((subject: any) => {
               const statusColor =
+                subject.status === 'abundant'
+                  ? 'bg-success'
+                  : subject.status === 'caution'
+                    ? 'bg-warning'
+                    : 'bg-danger';
+
+              const textColor =
                 subject.status === 'abundant'
                   ? 'text-success'
                   : subject.status === 'caution'
                     ? 'text-warning'
                     : 'text-danger';
 
+              const progressPercent = (subject.tokens_remaining / subject.tokens_max) * 100;
+
               return (
                 <div
                   key={subject.id}
-                  className="rounded-md border border-text-secondary border-opacity-20 bg-surface p-3"
+                  className="rounded-lg border border-text-secondary border-opacity-20 bg-surface p-4 hover:border-text-secondary hover:border-opacity-40 transition-colors"
                 >
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-start justify-between mb-2">
                     <div className="flex-1">
-                      <p className="font-medium">
-                        {subject.code} ({subject.credits}cr)
+                      <p className="font-semibold text-text-primary">
+                        {subject.code} <span className="text-xs text-text-secondary">({subject.credits}cr)</span>
                       </p>
-                      <p className={`text-xs mt-1 ${statusColor}`}>
-                        {subject.tokens_remaining}/{subject.tokens_max} tokens
+                      <p className="text-xs text-text-secondary">
+                        {subject.name}
                       </p>
                     </div>
+                    <span className={`text-lg font-bold ${textColor}`}>
+                      {subject.tokens_remaining}/{subject.tokens_max}
+                    </span>
                   </div>
+
+                  {/* Progress Bar */}
+                  <div className="w-full h-2 bg-surface-raised rounded-full overflow-hidden mb-2">
+                    <div
+                      className={`h-full ${statusColor} transition-all`}
+                      style={{ width: `${progressPercent}%` }}
+                    ></div>
+                  </div>
+
+                  <p className={`text-xs font-medium ${textColor}`}>
+                    {subject.status === 'abundant'
+                      ? '✓ Abundant'
+                      : subject.status === 'caution'
+                        ? '⚠ Caution'
+                        : '🔴 Danger'}
+                  </p>
                 </div>
               );
             })}
