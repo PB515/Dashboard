@@ -1,70 +1,78 @@
 import Link from 'next/link';
+import { createClient } from '@supabase/supabase-js';
 
-const mockData = {
-  next_class: {
-    id: 'class-001',
-    subject_id: 'subj-fra',
-    week: 1,
-    day_of_week: 'Monday',
-    time_slot: '09:00 AM - 10:30 AM',
-    room: 'Lab 101',
-    professor: 'Dr. Patel',
-    subject: {
-      code: 'FRA',
-      name: 'Financial Risk Analysis',
-      credits: 3,
-    },
-  },
-  token_vault: [
-    {
-      id: 'subj-fra',
-      code: 'FRA',
-      name: 'Financial Risk Analysis',
-      credits: 3,
-      tokens_remaining: 2,
-      tokens_max: 2,
-      status: 'abundant',
-    },
-    {
-      id: 'subj-haw',
-      code: 'HAW',
-      name: 'Heritage and Wisdom',
-      credits: 1,
-      tokens_remaining: 1,
-      tokens_max: 1,
-      status: 'caution',
-    },
-  ],
-  pending_tasks: {
-    urgent: [
-      {
-        id: 'task-001',
-        title: 'FRA Case Study - Risk Modeling',
-        quality_score: 65,
-        deadline: '2026-07-28',
-      },
-    ],
-    momentum: [
-      {
-        id: 'task-002',
-        title: 'Marketing Fundamentals - Week 1 Notes',
-        quality_score: 92,
-      },
-    ],
-  },
-  gold_medal_status: {
-    earned_cgpa: 8.9,
-    projected_cgpa: { low: 9.2, high: 9.5 },
-    target_cgpa: 9.6,
-    gap: { low: -0.4, high: -0.1, status: 'at_risk' },
-    mastery_percent: 68,
-    execution_risk: 'medium',
-    last_updated: new Date().toISOString(),
-  },
-};
+async function getDashboardData() {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+    process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+  );
 
-export default function Home() {
-  const dashboard = mockData;
+  // Fetch all subjects
+  const { data: subjects, error: subjectsError } = await supabase
+    .from('subjects')
+    .select('*')
+    .limit(100);
+
+  if (subjectsError) {
+    console.error('Error fetching subjects:', subjectsError);
+  }
+
+  // Fetch next class
+  const { data: nextClass } = await supabase
+    .from('timetable_entries')
+    .select('*')
+    .limit(1)
+    .order('created_at', { ascending: false });
+
+  // Calculate token status
+  const tokenVault = (subjects || []).map((subject: any) => {
+    const tokens_max = subject.max_bunks_allowed;
+    const tokens_remaining = tokens_max - (subject.bunks_used || 0);
+
+    let status = 'abundant';
+    if (tokens_remaining < 2) status = 'danger';
+    else if (tokens_remaining < 4) status = 'caution';
+
+    return {
+      id: subject.id,
+      code: subject.code,
+      name: subject.name,
+      credits: subject.credits,
+      tokens_remaining,
+      tokens_max,
+      status,
+    };
+  });
+
+  return {
+    next_class: nextClass?.[0] ? {
+      id: nextClass[0].id,
+      subject_id: nextClass[0].subject_id,
+      week: nextClass[0].week,
+      day_of_week: nextClass[0].day_of_week,
+      time_slot: nextClass[0].time_slot,
+      room: nextClass[0].room,
+      professor: nextClass[0].professor,
+    } : null,
+    token_vault: tokenVault,
+    pending_tasks: {
+      urgent: [],
+      momentum: [],
+    },
+    gold_medal_status: {
+      earned_cgpa: 8.9,
+      projected_cgpa: { low: 9.2, high: 9.5 },
+      target_cgpa: 9.6,
+      gap: { low: -0.4, high: -0.1, status: 'at_risk' },
+      mastery_percent: 68,
+      execution_risk: 'medium',
+      last_updated: new Date().toISOString(),
+    },
+  };
+}
+
+export default async function Home() {
+  const dashboard = await getDashboardData();
 
   return (
     <div className="min-h-screen bg-background text-text-primary">
@@ -83,7 +91,7 @@ export default function Home() {
               🎓 NEXT CLASS
             </h2>
             <h3 className="mb-2 text-2xl font-bold">
-              {dashboard.next_class.subject.name}
+              {dashboard.next_class.subject_id}
             </h3>
             <p className="mb-4 text-sm text-text-secondary">
               {dashboard.next_class.room} · {dashboard.next_class.professor}

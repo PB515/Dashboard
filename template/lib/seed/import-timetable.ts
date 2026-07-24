@@ -141,16 +141,27 @@ async function seedData() {
   console.log('🌱 Starting timetable seed...');
 
   try {
-    // Get test user (or create one)
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    // Use service-role to seed data for the authenticated user
+    // The userId will be set when user logs in via Google OAuth
+    // For seeding, we'll use a placeholder that can be replaced
+    const userId = process.env.USER_ID || '00000000-0000-0000-0000-000000000000';
+    console.log(`📝 Seeding data for user: ${userId}`);
 
-    if (authError || !user) {
-      console.error('❌ No authenticated user found. Please log in first.');
-      process.exit(1);
+    // 0. Create user record (will be overwritten when user logs in)
+    console.log('👤 Creating user record...');
+    const { error: userError } = await supabase
+      .from('users')
+      .upsert({
+        id: userId,
+        email: 'test@example.com',
+        name: 'Test User',
+      });
+
+    if (userError) {
+      console.log(`⚠️  User record: ${userError.message}`);
+    } else {
+      console.log(`✅ User record created`);
     }
-
-    const userId = user.id;
-    console.log(`📝 Using user: ${userId}`);
 
     // 1. Upsert subjects
     console.log('📚 Importing 11 subjects...');
