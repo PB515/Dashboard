@@ -27,14 +27,15 @@ export async function GET(request: Request) {
       .select(
         `
         id,
-        week_number,
+        week,
         day_of_week,
-        start_time,
-        end_time,
+        session,
+        time_slot,
         room,
-        subject_id,
-        subjects:subject_id (id, code, name, credits),
-        attendance_logs!left(id, status, logged_at)
+        professor,
+        status,
+        calendar_event_id,
+        subject_id
       `
       )
       .eq('user_id', user.id);
@@ -47,14 +48,14 @@ export async function GET(request: Request) {
           { status: 400 }
         );
       }
-      query = query.eq('week_number', weekNum);
+      query = query.eq('week', weekNum);
     }
 
     if (subjectId) {
       query = query.eq('subject_id', subjectId);
     }
 
-    const { data: entries, error } = await query.order('week_number', {
+    const { data: entries, error } = await query.order('week', {
       ascending: true,
     });
 
@@ -76,26 +77,17 @@ export async function GET(request: Request) {
         end: endDate.toISOString().split('T')[0],
       },
       entries: (entries || []).map((entry: any) => ({
+        ...entry,
         id: entry.id,
         user_id: user.id,
         subject_id: entry.subject_id,
-        week_number: entry.week_number,
+        week: entry.week,
         day_of_week: entry.day_of_week,
-        time_slot: `${entry.start_time}-${entry.end_time}`,
+        time_slot: entry.time_slot,
         room: entry.room,
-        professor: entry.subjects?.name || 'TBA',
-        status: 'scheduled',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        subject: {
-          code: entry.subjects?.code || '',
-          name: entry.subjects?.name || '',
-          credits: entry.subjects?.credits || 2,
-        },
-        attendance:
-          entry.attendance_logs && entry.attendance_logs.length > 0
-            ? entry.attendance_logs[0]
-            : undefined,
+        professor: entry.professor,
+        status: entry.status,
+        calendar_event_id: entry.calendar_event_id,
       })),
     };
 

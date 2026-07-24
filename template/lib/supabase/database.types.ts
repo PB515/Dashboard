@@ -13,17 +13,23 @@ export type Database = {
         Row: {
           id: string
           email: string
+          name: string | null
           created_at: string
+          updated_at: string
         }
         Insert: {
           id?: string
           email: string
+          name?: string | null
           created_at?: string
+          updated_at?: string
         }
         Update: {
           id?: string
           email?: string
+          name?: string | null
           created_at?: string
+          updated_at?: string
         }
       }
       subjects: {
@@ -33,8 +39,12 @@ export type Database = {
           code: string
           name: string
           credits: number
-          professor: string
+          professor: string | null
+          total_sessions: number
+          max_bunks_allowed: number
+          bunks_used: number
           created_at: string
+          updated_at: string
         }
         Insert: {
           id?: string
@@ -42,8 +52,12 @@ export type Database = {
           code: string
           name: string
           credits: number
-          professor: string
+          professor?: string | null
+          total_sessions: number
+          max_bunks_allowed: number
+          bunks_used?: number
           created_at?: string
+          updated_at?: string
         }
         Update: {
           id?: string
@@ -51,8 +65,12 @@ export type Database = {
           code?: string
           name?: string
           credits?: number
-          professor?: string
+          professor?: string | null
+          total_sessions?: number
+          max_bunks_allowed?: number
+          bunks_used?: number
           created_at?: string
+          updated_at?: string
         }
       }
       timetable_entries: {
@@ -60,34 +78,46 @@ export type Database = {
           id: string
           user_id: string
           subject_id: string
+          week: number
           day_of_week: string
-          start_time: string
-          end_time: string
-          room: string
-          week_number: number
+          session: number
+          time_slot: string
+          room: string | null
+          professor: string | null
+          status: string
+          calendar_event_id: string | null
           created_at: string
+          updated_at: string
         }
         Insert: {
           id?: string
           user_id: string
           subject_id: string
+          week: number
           day_of_week: string
-          start_time: string
-          end_time: string
-          room: string
-          week_number: number
+          session: number
+          time_slot: string
+          room?: string | null
+          professor?: string | null
+          status?: string
+          calendar_event_id?: string | null
           created_at?: string
+          updated_at?: string
         }
         Update: {
           id?: string
           user_id?: string
           subject_id?: string
+          week?: number
           day_of_week?: string
-          start_time?: string
-          end_time?: string
-          room?: string
-          week_number?: number
+          session?: number
+          time_slot?: string
+          room?: string | null
+          professor?: string | null
+          status?: string
+          calendar_event_id?: string | null
           created_at?: string
+          updated_at?: string
         }
       }
       attendance_logs: {
@@ -96,24 +126,30 @@ export type Database = {
           user_id: string
           timetable_entry_id: string
           status: string
-          logged_at: string
+          bunk_token_spent: boolean
+          marked_at: string
           created_at: string
+          updated_at: string
         }
         Insert: {
           id?: string
           user_id: string
           timetable_entry_id: string
-          status: string
-          logged_at: string
+          status?: string
+          bunk_token_spent?: boolean
+          marked_at?: string
           created_at?: string
+          updated_at?: string
         }
         Update: {
           id?: string
           user_id?: string
           timetable_entry_id?: string
           status?: string
-          logged_at?: string
+          bunk_token_spent?: boolean
+          marked_at?: string
           created_at?: string
+          updated_at?: string
         }
       }
       work_items: {
@@ -121,66 +157,99 @@ export type Database = {
           id: string
           user_id: string
           subject_id: string
-          title: string
           type: string
+          title: string
+          description: string | null
+          deadline: string | null
           status: string
-          priority: number
+          quality_score: number | null
+          comprehension_level: number | null
+          credit_weight: number | null
+          assessment_weight: string | null
+          evidence_link: string | null
+          feedback: string | null
+          revision_number: number
+          source: string
           created_at: string
+          updated_at: string
         }
         Insert: {
           id?: string
           user_id: string
           subject_id: string
-          title: string
           type: string
-          status: string
-          priority: number
+          title: string
+          description?: string | null
+          deadline?: string | null
+          status?: string
+          quality_score?: number | null
+          comprehension_level?: number | null
+          credit_weight?: number | null
+          assessment_weight?: string | null
+          evidence_link?: string | null
+          feedback?: string | null
+          revision_number?: number
+          source?: string
           created_at?: string
+          updated_at?: string
         }
         Update: {
           id?: string
           user_id?: string
           subject_id?: string
-          title?: string
           type?: string
+          title?: string
+          description?: string | null
+          deadline?: string | null
           status?: string
-          priority?: number
+          quality_score?: number | null
+          comprehension_level?: number | null
+          credit_weight?: number | null
+          assessment_weight?: string | null
+          evidence_link?: string | null
+          feedback?: string | null
+          revision_number?: number
+          source?: string
           created_at?: string
+          updated_at?: string
         }
       }
       research_projects: {
         Row: {
           id: string
           user_id: string
-          subject_id: string
           title: string
-          project_type: string
-          status: string
+          description: string | null
           progress_percent: number
+          status: string
+          start_date: string | null
           target_completion_date: string | null
           created_at: string
+          updated_at: string
         }
         Insert: {
           id?: string
           user_id: string
-          subject_id: string
           title: string
-          project_type: string
-          status: string
-          progress_percent: number
+          description?: string | null
+          progress_percent?: number
+          status?: string
+          start_date?: string | null
           target_completion_date?: string | null
           created_at?: string
+          updated_at?: string
         }
         Update: {
           id?: string
           user_id?: string
-          subject_id?: string
           title?: string
-          project_type?: string
-          status?: string
+          description?: string | null
           progress_percent?: number
+          status?: string
+          start_date?: string | null
           target_completion_date?: string | null
           created_at?: string
+          updated_at?: string
         }
       }
       nptel_courses: {
@@ -188,277 +257,77 @@ export type Database = {
           id: string
           user_id: string
           subject_id: string
-          course_id: string
           course_name: string
           course_code: string | null
-          instructor: string | null
-          duration_weeks: number | null
-          total_lectures: number | null
           lectures_completed: number
-          status: string
-          enrollment_date: string | null
-          target_completion_date: string | null
+          total_lectures: number | null
+          assignments_submitted: number
+          certificate_status: string
           created_at: string
+          updated_at: string
         }
         Insert: {
           id?: string
           user_id: string
           subject_id: string
-          course_id: string
           course_name: string
           course_code?: string | null
-          instructor?: string | null
-          duration_weeks?: number | null
-          total_lectures?: number | null
           lectures_completed?: number
-          status?: string
-          enrollment_date?: string | null
-          target_completion_date?: string | null
+          total_lectures?: number | null
+          assignments_submitted?: number
+          certificate_status?: string
           created_at?: string
+          updated_at?: string
         }
         Update: {
           id?: string
           user_id?: string
           subject_id?: string
-          course_id?: string
           course_name?: string
           course_code?: string | null
-          instructor?: string | null
-          duration_weeks?: number | null
-          total_lectures?: number | null
           lectures_completed?: number
-          status?: string
-          enrollment_date?: string | null
-          target_completion_date?: string | null
+          total_lectures?: number | null
+          assignments_submitted?: number
+          certificate_status?: string
           created_at?: string
+          updated_at?: string
         }
       }
-      nptel_assignments: {
+      rubrics: {
         Row: {
           id: string
           user_id: string
-          nptel_course_id: string
-          assignment_number: number | null
-          title: string
-          description: string | null
-          due_date: string | null
+          subject_id: string | null
+          work_item_type: string | null
+          criteria: string | null
           max_score: number
-          score_obtained: number | null
-          status: string
-          submission_date: string | null
-          feedback: string | null
           created_at: string
+          updated_at: string
         }
         Insert: {
           id?: string
           user_id: string
-          nptel_course_id: string
-          assignment_number?: number | null
-          title: string
-          description?: string | null
-          due_date?: string | null
+          subject_id?: string | null
+          work_item_type?: string | null
+          criteria?: string | null
           max_score?: number
-          score_obtained?: number | null
-          status?: string
-          submission_date?: string | null
-          feedback?: string | null
           created_at?: string
+          updated_at?: string
         }
         Update: {
           id?: string
           user_id?: string
-          nptel_course_id?: string
-          assignment_number?: number | null
-          title?: string
-          description?: string | null
-          due_date?: string | null
+          subject_id?: string | null
+          work_item_type?: string | null
+          criteria?: string | null
           max_score?: number
-          score_obtained?: number | null
-          status?: string
-          submission_date?: string | null
-          feedback?: string | null
           created_at?: string
-        }
-      }
-      nptel_certificates: {
-        Row: {
-          id: string
-          user_id: string
-          nptel_course_id: string
-          certificate_type: string
-          issue_date: string | null
-          certificate_url: string | null
-          score_percentage: number | null
-          status: string
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          user_id: string
-          nptel_course_id: string
-          certificate_type: string
-          issue_date?: string | null
-          certificate_url?: string | null
-          score_percentage?: number | null
-          status?: string
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          user_id?: string
-          nptel_course_id?: string
-          certificate_type?: string
-          issue_date?: string | null
-          certificate_url?: string | null
-          score_percentage?: number | null
-          status?: string
-          created_at?: string
-        }
-      }
-      lecture_notes: {
-        Row: {
-          id: string
-          user_id: string
-          subject_id: string
-          title: string
-          content: string | null
-          comprehension_level: number
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          user_id: string
-          subject_id: string
-          title: string
-          content?: string | null
-          comprehension_level?: number
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          user_id?: string
-          subject_id?: string
-          title?: string
-          content?: string | null
-          comprehension_level?: number
-          created_at?: string
-        }
-      }
-      group_projects: {
-        Row: {
-          id: string
-          user_id: string
-          subject_id: string
-          project_name: string
-          group_members: number
-          status: string
-          progress_percent: number
-          target_completion_date: string | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          user_id: string
-          subject_id: string
-          project_name: string
-          group_members: number
-          status: string
-          progress_percent: number
-          target_completion_date?: string | null
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          user_id?: string
-          subject_id?: string
-          project_name?: string
-          group_members?: number
-          status?: string
-          progress_percent?: number
-          target_completion_date?: string | null
-          created_at?: string
-        }
-      }
-      artifacts: {
-        Row: {
-          id: string
-          user_id: string
-          subject_id: string
-          title: string
-          artifact_type: string
-          status: string
-          quality_score: number | null
-          revision_number: number
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          user_id: string
-          subject_id: string
-          title: string
-          artifact_type: string
-          status: string
-          quality_score?: number | null
-          revision_number?: number
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          user_id?: string
-          subject_id?: string
-          title?: string
-          artifact_type?: string
-          status?: string
-          quality_score?: number | null
-          revision_number?: number
-          created_at?: string
-        }
-      }
-      db_meta: {
-        Row: {
-          version: number | null
-          name: string
-          filename: string
-          sha256: string
-          applied_at: string
-        }
-        Insert: {
-          version?: number | null
-          name: string
-          filename: string
-          sha256: string
-          applied_at?: string
-        }
-        Update: {
-          version?: number | null
-          name?: string
-          filename?: string
-          sha256?: string
-          applied_at?: string
-        }
-      }
-      example_widget: {
-        Row: {
-          id: string
-          name: string
-        }
-        Insert: {
-          id?: string
-          name: string
-        }
-        Update: {
-          id?: string
-          name?: string
+          updated_at?: string
         }
       }
     }
     Views: {}
-    Functions: {
-      keepalive: {
-        Args: {}
-        Returns: string
-      }
-    }
+    Functions: {}
     Enums: {}
   }
 }

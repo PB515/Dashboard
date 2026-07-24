@@ -44,7 +44,7 @@ export async function POST(request: Request) {
     // Get timetable entry
     const { data: entry, error: entryError } = await supabase
       .from('timetable_entries')
-      .select('id, subject_id, day_of_week, start_time, end_time')
+      .select('id, subject_id, week, day_of_week, session, time_slot')
       .eq('id', timetable_entry_id)
       .eq('user_id', user.id)
       .single();
@@ -107,7 +107,8 @@ export async function POST(request: Request) {
           user_id: user.id,
           timetable_entry_id,
           status: 'bunked',
-          logged_at: date,
+          bunk_token_spent: true,
+          marked_at: new Date().toISOString(),
         })
         .select()
         .single();

@@ -33,16 +33,28 @@ export async function GET(request: Request) {
       .select('timetable_entry_id, status, date, timetable_entries(subject_id)')
       .eq('user_id', user.id);
 
-    // Add computed fields for each subject
-    const subjectsWithMeta = (subjects || []).map((subject) => ({
-      ...subject,
-      attended_count: Math.floor(Math.random() * 20),
-      total_sessions: 30,
-      status: 'active',
-    }));
+    // Calculate tokens for each subject
+    const subjectsWithTokens = (subjects || []).map((subject) => {
+      const tokensRemaining = subject.max_bunks_allowed - subject.bunks_used;
+      const status =
+        tokensRemaining >= 5
+          ? 'abundant'
+          : tokensRemaining >= 3
+            ? 'caution'
+            : 'danger';
+
+      const attendedCount = subject.total_sessions - Math.floor(Math.random() * 5);
+
+      return {
+        ...subject,
+        tokens_remaining: tokensRemaining,
+        attended_count: attendedCount,
+        status,
+      };
+    });
 
     const response: SubjectsResponse = {
-      subjects: subjectsWithMeta,
+      subjects: subjectsWithTokens,
     };
 
     return NextResponse.json(response);
@@ -74,7 +86,8 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { code, name, credits, professor } = await request.json();
+    const { code, name, credits, professor, total_sessions, max_bunks_allowed } =
+      await request.json();
 
     if (!code || !name || !credits) {
       return NextResponse.json(
@@ -90,11 +103,14 @@ export async function POST(request: Request) {
     const { data, error } = await supabase
       .from('subjects')
       .insert({
+        id: `${code.toLowerCase()}-${Date.now()}`,
         user_id: user.id,
         code,
         name,
         credits,
         professor: professor || 'TBA',
+        total_sessions: total_sessions || 30,
+        max_bunks_allowed: max_bunks_allowed || 7,
       })
       .select()
       .single();
@@ -117,9 +133,9 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         ...data,
+        tokens_remaining: data.max_bunks_allowed,
         attended_count: 0,
-        total_sessions: 30,
-        status: 'active',
+        status: 'abundant',
       },
       { status: 201 }
     );
