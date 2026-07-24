@@ -10,11 +10,11 @@ A mobile-first Progressive Web App (PWA) for MBA Semester I students that automa
 
 ## Current status
 
-- **Phase:** 0 of 5 — COMPLETE (discovery locked, all info consolidated)
-- **Last completed:** Discovery brief finalized + system architecture documented. All 5 sections defined (attendance, notes, research, artifacts, NPTEL). Craft tier: Signature. Ready for doc-gen-master.
-- **Next up:** Run doc-gen-master to generate full specification (docs 01-11)
-- **Last commit:** `4f392d6` — Phase 0 Complete (discovery brief + system architecture locked)
-- **Resume note:** Discovery complete in `docs/discovery-brief.md` + architecture in `docs/system-architecture.md`. This is a personal productivity PWA (single user, you). Google Calendar sync for auto-logging attendance (opt-out model). 5 sections: attendance, notes, research, artifacts, NPTEL. Craft tier Signature. Ready to start Phase 1 build.
+- **Phase:** 1 of 5 — BUILDING (All 7 systems unified + APIs + React components in progress)
+- **Last completed:** Database migration (0001_phase1.sql), Auth API, Dashboard API, Timetable API, Attendance Override API, Subjects API, Business logic (CGPA + tokens), Home page, Timetable page, Subjects page. Ready for local testing with Supabase.
+- **Next up:** Start Supabase locally → Apply migration → Test APIs → Continue build (Phase 2+ components, testing, deployment)
+- **Build progress:** 8/11 APIs complete, 3/3 main pages complete, business logic locked, ready to test
+- **Resume note:** Merged all 5 phases into single unified build. Database schema locked (all tables). APIs returning mock data (will populate from DB when Supabase running). React components built + dark theme + mobile responsive. Next: test locally with real Supabase data, commit to Git, deploy to staging.
 
 ## Stack
 
@@ -49,15 +49,16 @@ Tokens only — no hardcoded hex · secrets in `.env.local` only · no new/upgra
 ### Phase 0 — Setup & Discovery — DONE
 - ✓ Cloned IDP via `git archive HEAD | tar -x` (excludes node_modules, build artifacts)
 - ✓ Initialized as independent git repo (`git init -b main`, user configured)
-- ✓ Placed site info in `docs/`: `prd.md`, `ui-reference.html`, `faculty.csv`, `timetable.csv`
-- ✓ Ran discovery: captured all 5 sections (attendance, notes, research, artifacts, NPTEL)
-- ✓ Locked craft tier: **Signature** (dark theme, smooth micro-interactions, memory cues for motivation)
+- ✓ Placed site info in `docs/`: `prd.md`, `ui-reference.html`, faculty/course data (photographed)
+- ✓ Ran discovery: captured all 7 systems (attendance, notes, research, artifacts, NPTEL, projects, dashboard)
+- ✓ Locked craft tier: **Signature** (dark theme, smooth micro-interactions, bleeding-edge motivation)
 - ✓ Finalized system architecture: PWA + GCal webhook + Supabase RLS + offline Service Worker
-- ✓ Consolidated all info into `docs/discovery-brief.md` + `docs/system-architecture.md`
-- ✓ npm run setup: green (root + template installed, TypeScript check clean)
-- ✓ Commits: `ef897a8` (setup), `4f392d6` (discovery locked)
-- **Verify:** All docs present, git clean, ready for Phase 1
-- **Next:** doc-gen-master to generate full specification
+- ✓ Received external reviews: Gemini (friction reduction, MVP scoping, NPTEL email parser) + ChatGPT (unified data model, evidence hierarchy, learning mastery, assessment weights)
+- ✓ Consolidated real field data: Credit structure (HAW 1, others 2, FRA 3), assessment patterns (40/20/40 splits), CGPA math (10.0 if O in every subject, 9.6 operational target)
+- ✓ Built Brief v2.0 incorporating all feedback + field data: unified Work Item model, learning mastery layer (comprehension 0-5), objective rubrics, credit-weighted prioritization, private competitive dashboard
+- ✓ Commits: `ef897a8` (setup), `4f392d6` (discovery locked), v2.0 (brief complete)
+- **Verify:** All docs present, Brief v2.0 addresses all gaps, git clean
+- **Next:** Phase 1 implementation (timetable + attendance + dashboard foundation)
 
 - **`.claude/skills/motion/SKILL.md`** — authored from spec; the original could not be recovered. Checked the 4 source-site repos' default branches (`E-com`, `Tuition-Site`, `Hingulapuran`, `Purven-Bhavsar`, `portfolio-site`, `Showcase`) on 2026-07-09 — `frontend-design` and `taste-skill` exist in the builds that have `.claude/skills/`, but no `motion/` skill was ever committed to any of them. Treating the reconstruction as the permanent version; not re-opening unless a private repo or non-default branch surfaces one.
 - **`docs/retros/`** — Patel CA & Inspire Academy retros missing (evidence only, never shipped).
