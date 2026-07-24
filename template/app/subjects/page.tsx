@@ -1,46 +1,66 @@
-'use client';
-
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import type { SubjectsResponse, SubjectWithTokens } from '@/lib/types';
+
+const mockSubjects = [
+  {
+    id: 'subj-fra',
+    code: 'FRA',
+    name: 'Financial Risk Analysis',
+    credits: 3,
+    tokens_remaining: 2,
+    tokens_max: 2,
+    attended_count: 8,
+    total_sessions: 10,
+    status: 'abundant',
+  },
+  {
+    id: 'subj-haw',
+    code: 'HAW',
+    name: 'Heritage and Wisdom',
+    credits: 1,
+    tokens_remaining: 1,
+    tokens_max: 1,
+    attended_count: 9,
+    total_sessions: 10,
+    status: 'caution',
+  },
+  {
+    id: 'subj-marketing',
+    code: 'MKT',
+    name: 'Strategic Marketing',
+    credits: 2,
+    tokens_remaining: 2,
+    tokens_max: 3,
+    attended_count: 8,
+    total_sessions: 10,
+    status: 'caution',
+  },
+  {
+    id: 'subj-quant',
+    code: 'QUANT',
+    name: 'Quantitative Methods',
+    credits: 2,
+    tokens_remaining: 0,
+    tokens_max: 3,
+    attended_count: 8,
+    total_sessions: 10,
+    status: 'danger',
+  },
+];
+
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case 'abundant':
+      return 'bg-success bg-opacity-10 border-success border-opacity-30 text-success';
+    case 'caution':
+      return 'bg-warning bg-opacity-10 border-warning border-opacity-30 text-warning';
+    case 'danger':
+      return 'bg-danger bg-opacity-10 border-danger border-opacity-30 text-danger';
+    default:
+      return 'bg-surface border-text-secondary border-opacity-20';
+  }
+};
 
 export default function SubjectsPage() {
-  const [subjects, setSubjects] = useState<SubjectWithTokens[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    async function fetchSubjects() {
-      try {
-        const res = await fetch('/api/subjects');
-        if (!res.ok) {
-          throw new Error(`Subjects error: ${res.status}`);
-        }
-        const data: SubjectsResponse = await res.json();
-        setSubjects(data.subjects);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load subjects');
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchSubjects();
-  }, []);
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'abundant':
-        return 'bg-success bg-opacity-10 border-success border-opacity-30 text-success';
-      case 'caution':
-        return 'bg-warning bg-opacity-10 border-warning border-opacity-30 text-warning';
-      case 'danger':
-        return 'bg-danger bg-opacity-10 border-danger border-opacity-30 text-danger';
-      default:
-        return 'bg-surface border-text-secondary border-opacity-20';
-    }
-  };
-
   return (
     <div className="min-h-screen bg-background text-text-primary">
       {/* Header */}
@@ -50,27 +70,9 @@ export default function SubjectsPage() {
       </header>
 
       <main className="mx-auto max-w-4xl p-4">
-        {loading && (
-          <div className="text-center py-8">
-            <p className="text-text-secondary">Loading subjects...</p>
-          </div>
-        )}
-
-        {error && (
-          <div className="text-center py-8 text-danger">
-            <p>{error}</p>
-          </div>
-        )}
-
-        {!loading && subjects.length === 0 && (
-          <div className="text-center py-8">
-            <p className="text-text-secondary">No subjects found. Import timetable to get started.</p>
-          </div>
-        )}
-
-        {!loading && subjects.length > 0 && (
+        {mockSubjects.length > 0 && (
           <div className="space-y-4">
-            {subjects.map((subject) => (
+            {mockSubjects.map((subject) => (
               <div
                 key={subject.id}
                 className={`rounded-lg border p-6 ${getStatusColor(subject.status)}`}

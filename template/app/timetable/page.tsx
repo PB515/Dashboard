@@ -1,34 +1,74 @@
-'use client';
-
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import type { TimetableResponse } from '@/lib/types';
+
+const mockClasses = {
+  Monday: [
+    {
+      id: '1',
+      time_slot: '09:00 AM - 10:30 AM',
+      subject: { name: 'Financial Risk Analysis' },
+      room: 'Lab 101',
+      professor: 'Dr. Patel',
+      status: 'scheduled',
+      attendance: { status: 'attended' },
+    },
+    {
+      id: '2',
+      time_slot: '11:00 AM - 12:30 PM',
+      subject: { name: 'Strategic Marketing' },
+      room: 'Room 205',
+      professor: 'Prof. Shah',
+      status: 'scheduled',
+      attendance: { status: 'attended' },
+    },
+  ],
+  Tuesday: [
+    {
+      id: '3',
+      time_slot: '10:00 AM - 11:30 AM',
+      subject: { name: 'Heritage and Wisdom' },
+      room: 'Auditorium',
+      professor: 'Dr. Kumar',
+      status: 'scheduled',
+      attendance: { status: 'bunked' },
+    },
+  ],
+  Wednesday: [
+    {
+      id: '4',
+      time_slot: '02:00 PM - 03:30 PM',
+      subject: { name: 'Financial Risk Analysis' },
+      room: 'Lab 101',
+      professor: 'Dr. Patel',
+      status: 'scheduled',
+      attendance: { status: 'attended' },
+    },
+  ],
+  Thursday: [
+    {
+      id: '5',
+      time_slot: '09:00 AM - 10:30 AM',
+      subject: { name: 'Strategic Marketing' },
+      room: 'Room 205',
+      professor: 'Prof. Shah',
+      status: 'cancelled',
+      attendance: null,
+    },
+  ],
+  Friday: [
+    {
+      id: '6',
+      time_slot: '11:00 AM - 12:30 PM',
+      subject: { name: 'Financial Risk Analysis' },
+      room: 'Lab 101',
+      professor: 'Dr. Patel',
+      status: 'scheduled',
+      attendance: { status: 'attended' },
+    },
+  ],
+};
 
 export default function TimetablePage() {
-  const [timetable, setTimetable] = useState<TimetableResponse | null>(null);
-  const [week, setWeek] = useState(1);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    async function fetchTimetable() {
-      setLoading(true);
-      try {
-        const res = await fetch(`/api/timetable?week=${week}`);
-        if (!res.ok) {
-          throw new Error(`Timetable error: ${res.status}`);
-        }
-        const data = await res.json();
-        setTimetable(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load timetable');
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchTimetable();
-  }, [week]);
+  const week = 1;
 
   return (
     <div className="min-h-screen bg-background text-text-primary">
@@ -41,87 +81,64 @@ export default function TimetablePage() {
         {/* Week Picker */}
         <div className="mb-6 flex items-center justify-between">
           <button
-            onClick={() => setWeek(Math.max(1, week - 1))}
-            disabled={week === 1}
+            disabled
             className="rounded-md bg-surface px-4 py-2 text-text-secondary disabled:opacity-50"
           >
             ← Prev
           </button>
-          <h2 className="text-lg font-semibold">
-            Week {week} ({timetable?.date_range.start || 'N/A'} – {timetable?.date_range.end || 'N/A'})
-          </h2>
-          <button
-            onClick={() => setWeek(Math.min(18, week + 1))}
-            disabled={week === 18}
-            className="rounded-md bg-surface px-4 py-2 text-text-secondary disabled:opacity-50"
-          >
+          <h2 className="text-lg font-semibold">Week {week} (N/A – N/A)</h2>
+          <button className="rounded-md bg-surface px-4 py-2 text-text-secondary hover:bg-surface-raised">
             Next →
           </button>
         </div>
 
-        {loading && (
-          <div className="text-center py-8">
-            <p className="text-text-secondary">Loading classes...</p>
-          </div>
-        )}
+        {/* Classes by Day */}
+        <div className="space-y-4">
+          {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map((day) => {
+            const dayClasses = (mockClasses as any)[day];
 
-        {error && (
-          <div className="text-center py-8 text-danger">
-            <p>{error}</p>
-          </div>
-        )}
+            if (!dayClasses || dayClasses.length === 0) return null;
 
-        {timetable && (
-          <div className="space-y-4">
-            {/* Group by day */}
-            {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map((day) => {
-              const dayEntries = timetable.entries.filter(
-                (e) => e.day_of_week === day
-              );
-
-              if (dayEntries.length === 0) return null;
-
-              return (
-                <div key={day}>
-                  <h3 className="mb-2 font-semibold text-text-secondary">{day}</h3>
-                  <div className="space-y-2">
-                    {dayEntries.map((entry) => (
-                      <div
-                        key={entry.id}
-                        className={`rounded-lg border p-4 ${
-                          entry.status === 'cancelled'
-                            ? 'border-text-secondary border-opacity-20 bg-surface opacity-50 line-through'
-                            : entry.attendance?.status === 'bunked'
-                              ? 'border-danger border-opacity-30 bg-danger bg-opacity-5'
-                              : 'border-text-secondary border-opacity-20 bg-surface-raised'
-                        }`}
-                      >
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <p className="font-bold">{entry.time_slot}</p>
-                            <p className="font-semibold">{entry.subject.name}</p>
-                            <p className="text-sm text-text-secondary">
-                              {entry.room} · {entry.professor}
-                            </p>
-                          </div>
-                          <div className="text-right">
-                            {entry.status === 'cancelled' ? (
-                              <span className="text-xs text-text-secondary">⊘ Cancelled</span>
-                            ) : entry.attendance?.status === 'bunked' ? (
-                              <span className="text-xs text-danger">🚫 Bunked</span>
-                            ) : (
-                              <span className="text-xs text-success">✓ Attended</span>
-                            )}
-                          </div>
+            return (
+              <div key={day}>
+                <h3 className="mb-2 font-semibold text-text-secondary">{day}</h3>
+                <div className="space-y-2">
+                  {dayClasses.map((entry: any) => (
+                    <div
+                      key={entry.id}
+                      className={`rounded-lg border p-4 ${
+                        entry.status === 'cancelled'
+                          ? 'border-text-secondary border-opacity-20 bg-surface opacity-50 line-through'
+                          : entry.attendance?.status === 'bunked'
+                            ? 'border-danger border-opacity-30 bg-danger bg-opacity-5'
+                            : 'border-text-secondary border-opacity-20 bg-surface-raised'
+                      }`}
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <p className="font-bold">{entry.time_slot}</p>
+                          <p className="font-semibold">{entry.subject.name}</p>
+                          <p className="text-sm text-text-secondary">
+                            {entry.room} · {entry.professor}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          {entry.status === 'cancelled' ? (
+                            <span className="text-xs text-text-secondary">⊘ Cancelled</span>
+                          ) : entry.attendance?.status === 'bunked' ? (
+                            <span className="text-xs text-danger">🚫 Bunked</span>
+                          ) : (
+                            <span className="text-xs text-success">✓ Attended</span>
+                          )}
                         </div>
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  ))}
                 </div>
-              );
-            })}
-          </div>
-        )}
+              </div>
+            );
+          })}
+        </div>
       </main>
 
       {/* Footer Navigation */}

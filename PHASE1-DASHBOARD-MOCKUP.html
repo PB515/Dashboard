@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBA Execution OS - Phase 1 Dashboard (Real Data Mockup)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #0f0f0f;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1024px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            border-bottom: 1px solid #333;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            color: #999;
+            font-size: 14px;
+        }
+
+        section {
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            color: #fff;
+        }
+
+        .hero-card {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .hero-card h3 {
+            color: #10b981;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .hero-card .subject-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .hero-card .meta {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .hero-card .time-info {
+            font-size: 16px;
+            margin-bottom: 16px;
+            color: #e0e0e0;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-auto {
+            background: transparent;
+            border: 1px solid #666;
+            color: #999;
+        }
+
+        .btn-spend {
+            background: #10b981;
+            color: #fff;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        .vault-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .subject-card {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .subject-info {
+            flex: 1;
+        }
+
+        .subject-code {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .subject-details {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .token-display {
+            text-align: right;
+        }
+
+        .token-count {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .token-label {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #333;
+            border-radius: 3px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+
+        .status-abundant { color: #10b981; }
+        .status-caution { color: #f59e0b; }
+        .status-danger { color: #ef4444; }
+
+        .fill-abundant { background: #10b981; }
+        .fill-caution { background: #f59e0b; }
+        .fill-danger { background: #ef4444; }
+
+        .tasks-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .task-list {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .task-list h3 {
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .task-list.urgent h3 {
+            color: #ef4444;
+        }
+
+        .task-list.momentum h3 {
+            color: #10b981;
+        }
+
+        .task-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #333;
+            font-size: 13px;
+        }
+
+        .task-item:last-child {
+            border-bottom: none;
+        }
+
+        .task-title {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .task-quality {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .gold-medal {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .metric-box {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .metric-status {
+            font-size: 12px;
+        }
+
+        footer {
+            border-top: 1px solid #333;
+            padding-top: 20px;
+            margin-top: 40px;
+        }
+
+        .footer-nav {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+        }
+
+        .nav-item {
+            text-align: center;
+            font-size: 14px;
+            color: #999;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .nav-item:hover {
+            color: #e0e0e0;
+        }
+
+        .nav-item.active {
+            color: #10b981;
+        }
+
+        .note {
+            background: #1a1a1a;
+            border-left: 3px solid #10b981;
+            padding: 12px;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>MBA Execution OS</h1>
+            <p class="subtitle">Gold Medal Track: Week 5+ | Real Data Preview</p>
+        </header>
+
+        <!-- NEXT CLASS -->
+        <section>
+            <h2>🎓 NEXT CLASS</h2>
+            <div class="hero-card">
+                <div style="color: #10b981; font-size: 12px; margin-bottom: 8px;">NEXT UP</div>
+                <div class="subject-name">Financial Reporting & Accounting</div>
+                <div class="meta">Room 101 · Prof. Riya Mehta</div>
+                <div class="time-info">Monday, Jul 29 · 9:10–10:00 AM</div>
+                <div class="buttons">
+                    <button class="btn-auto">✓ Auto-logged</button>
+                    <button class="btn-spend">Spend Bunk (11 left)</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- BUFFER VAULT -->
+        <section>
+            <h2>📊 BUFFER VAULT (11 Subjects, 22 Credits)</h2>
+            <div class="note">
+                💡 Tokens = strategic bunks. Green = plenty, Yellow = caution, Red = none left. Each subject gets ~1 bunk per 10 sessions.
+            </div>
+            <div class="vault-grid">
+                <!-- FRA - 3 Credits -->
+                <div class="subject-card">
+                    <div class="subject-info">
+                        <div class="subject-code">FRA (3 cr)</div>
+                        <div class="subject-details">Financial Reporting & Accounting</div>
+                        <div class="progress-bar"><div class="progress-fill fill-danger" style="width: 18%;"></div></div>
+                    </div>
+                    <div class="token-display">
+                        <div class="token-count status-danger">2/11</div>
+                        <div class="token-label">tokens</div>
+                    </div>
+                </div>
+
+                <!-- HAW - 1 Credit -->
+                <div class="subject-card">
+                    <div class="subject-info">
+                        <div class="subject-code">HAW (1 cr)</div>
+                        <div class="subject-details">Health & Wellness</div>
+                        <div class="progress-bar"><div class="progress-fill fill-danger" style="width: 0%;"></div></div>
+                    </div>
+                    <div class="token-display">
+                        <div class="token-count status-danger">0/3</div>
+                        <div class="token-label">tokens</div>
+                    </div>
+                </div>
+
+                <!-- ME - 2 Credits -->
+                <div class="subject-card">
+                    <div class="subject-info">
+                        <div class="subject-code">ME (2 cr)</div>
+                        <div class="subject-details">Managerial Economics</div>
+                        <div class="progress-bar"><div class="progress-fill fill-caution" style="width: 57%;"></div></div>
+                    </div>
+                    <div class="token-display">
+                        <div class="token-count status-caution">4/7</div>
+                        <div class="token-label">tokens</div>
+                    </div>
+                </div>
+
+                <!-- SM - 2 Credits -->
+                <div class="subject-card">
+                    <div class="subject-info">
+                        <div class="subject-code">SM (2 cr)</div>
+                        <div class="subject-details">Statistics for Managers</div>
+                        <div class="progress-bar"><div class="progress-fill fill-abundant" style="width: 86%;"></div></div>
+                    </div>
+                    <div class="token-display">
+                        <div class="token-count status-abundant">6/7</div>
+                        <div class="token-label">tokens</div>
+                    </div>
+                </div>
+
+                <!-- MC-I - 2 Credits -->
+                <div class="subject-card">
+                    <div class="subject-info">
+                        <div class="subject-code">MC-I (2 cr)</div>
+                        <div class="subject-details">Managerial Communication</div>
+                        <div class="progress-bar"><div class="progress-fill fill-abundant" style="width: 71%;"></div></div>
+                    </div>
+                    <div class="token-display">
+                        <div class="token-count status-abundant">5/7</div>
+                        <div class="token-label">tokens</div>
+                    </div>
+                </div>
+
+                <!-- MM - 2 Credits -->
+                <div class="subject-card">
+                    <div class="subject-info">
+                        <div class="subject-code">MM (2 cr)</div>
+                        <div class="subject-details">Marketing Management</div>
+                        <div class="progress-bar"><div class="progress-fill fill-caution" style="width: 43%;"></div></div>
+                    </div>
+                    <div class="token-display">
+                        <div class="token-count status-caution">3/7</div>
+                        <div class="token-label">tokens</div>
+                    </div>
+                </div>
+
+                <!-- OB - 2 Credits -->
+                <div class="subject-card">
+                    <div class="subject-info">
+                        <div class="subject-code">OB (2 cr)</div>
+                        <div class="subject-details">Organisational Behaviour</div>
+                        <div class="progress-bar"><div class="progress-fill fill-abundant" style="width: 57%;"></div></div>
+                    </div>
+                    <div class="token-display">
+                        <div class="token-count status-abundant">4/7</div>
+                        <div class="token-label">tokens</div>
+                    </div>
+                </div>
+
+                <!-- IBE - 2 Credits -->
+                <div class="subject-card">
+                    <div class="subject-info">
+                        <div class="subject-code">IBE (2 cr)</div>
+                        <div class="subject-details">Infrastructure Business Environment</div>
+                        <div class="progress-bar"><div class="progress-fill fill-caution" style="width: 43%;"></div></div>
+                    </div>
+                    <div class="token-display">
+                        <div class="token-count status-caution">3/7</div>
+                        <div class="token-label">tokens</div>
+                    </div>
+                </div>
+
+                <!-- DT - 2 Credits -->
+                <div class="subject-card">
+                    <div class="subject-info">
+                        <div class="subject-code">DT (2 cr)</div>
+                        <div class="subject-details">Design Thinking</div>
+                        <div class="progress-bar"><div class="progress-fill fill-abundant" style="width: 86%;"></div></div>
+                    </div>
+                    <div class="token-display">
+                        <div class="token-count status-abundant">6/7</div>
+                        <div class="token-label">tokens</div>
+                    </div>
+                </div>
+
+                <!-- ILR - 2 Credits -->
+                <div class="subject-card">
+                    <div class="subject-info">
+                        <div class="subject-code">ILR (2 cr)</div>
+                        <div class="subject-details">Infrastructure Law & Regulations</div>
+                        <div class="progress-bar"><div class="progress-fill fill-abundant" style="width: 57%;"></div></div>
+                    </div>
+                    <div class="token-display">
+                        <div class="token-count status-abundant">4/7</div>
+                        <div class="token-label">tokens</div>
+                    </div>
+                </div>
+
+                <!-- OM - 2 Credits -->
+                <div class="subject-card">
+                    <div class="subject-info">
+                        <div class="subject-code">OM (2 cr)</div>
+                        <div class="subject-details">Operations Management</div>
+                        <div class="progress-bar"><div class="progress-fill fill-caution" style="width: 43%;"></div></div>
+                    </div>
+                    <div class="token-display">
+                        <div class="token-count status-caution">3/7</div>
+                        <div class="token-label">tokens</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PENDING TASKS -->
+        <section>
+            <h2>⚡ PENDING TASKS</h2>
+            <div class="tasks-section">
+                <div class="task-list urgent">
+                    <h3>🔴 URGENT GAPS (Fix This Week)</h3>
+                    <div class="task-item">
+                        <div class="task-title">FRA Lecture #5 Notes</div>
+                        <div class="task-quality">Quality: 5/10 | Due: Today</div>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-title">HAW Health Assignment</div>
+                        <div class="task-quality">Missing | Due: Today</div>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-title">MM Group Project: Draft</div>
+                        <div class="task-quality">In Progress | Due: Jul 30 @ 5 PM</div>
+                    </div>
+                </div>
+
+                <div class="task-list momentum">
+                    <h3>🟢 MOMENTUM (Keep This Up)</h3>
+                    <div class="task-item">
+                        <div class="task-title">DT Design Case Study</div>
+                        <div class="task-quality">Quality: 9/10 ✓</div>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-title">SM Statistics Project</div>
+                        <div class="task-quality">Quality: 8.5/10</div>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-title">OB Team Reflection</div>
+                        <div class="task-quality">Submitted | Due: Jul 31</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GOLD MEDAL STATUS -->
+        <section>
+            <h2>🏆 GOLD MEDAL STATUS</h2>
+            <div class="gold-medal">
+                <div class="metric-box">
+                    <div class="metric-label">Earned CGPA</div>
+                    <div class="metric-value">8.9</div>
+                    <div class="metric-status">/ 10.0</div>
+                </div>
+
+                <div class="metric-box">
+                    <div class="metric-label">Projected CGPA</div>
+                    <div class="metric-value">9.2–9.5</div>
+                    <div class="metric-status">range</div>
+                </div>
+
+                <div class="metric-box">
+                    <div class="metric-label">Target (Gold)</div>
+                    <div class="metric-value">9.6</div>
+                    <div class="metric-status">operational</div>
+                </div>
+
+                <div class="metric-box">
+                    <div class="metric-label">Gap</div>
+                    <div class="metric-value" style="color: #f59e0b;">-0.1 to +0.4</div>
+                    <div class="metric-status">⚠️ at risk</div>
+                </div>
+
+                <div class="metric-box">
+                    <div class="metric-label">Mastery</div>
+                    <div class="metric-value" style="color: #10b981;">82%</div>
+                    <div class="metric-status">Phase 2+</div>
+                </div>
+
+                <div class="metric-box">
+                    <div class="metric-label">Execution Risk</div>
+                    <div class="metric-value" style="color: #f59e0b;">MEDIUM</div>
+                    <div class="metric-status">bunks near limit</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="note">
+            📝 This is what Phase 1 will show: Your 11 subjects, real token counts, pending tasks, and CGPA forecast. We're building this NOW with your actual timetable data.
+        </div>
+
+        <footer>
+            <div class="footer-nav">
+                <div class="nav-item active">🏠 Home</div>
+                <div class="nav-item">📅 Timetable</div>
+                <div class="nav-item">📊 Subjects</div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
