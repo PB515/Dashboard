@@ -1,74 +1,34 @@
 import Link from 'next/link';
+import { createClient } from '@supabase/supabase-js';
 
-const mockClasses = {
-  Monday: [
-    {
-      id: '1',
-      time_slot: '09:00 AM - 10:30 AM',
-      subject: { name: 'Financial Risk Analysis' },
-      room: 'Lab 101',
-      professor: 'Dr. Patel',
-      status: 'scheduled',
-      attendance: { status: 'attended' },
-    },
-    {
-      id: '2',
-      time_slot: '11:00 AM - 12:30 PM',
-      subject: { name: 'Strategic Marketing' },
-      room: 'Room 205',
-      professor: 'Prof. Shah',
-      status: 'scheduled',
-      attendance: { status: 'attended' },
-    },
-  ],
-  Tuesday: [
-    {
-      id: '3',
-      time_slot: '10:00 AM - 11:30 AM',
-      subject: { name: 'Heritage and Wisdom' },
-      room: 'Auditorium',
-      professor: 'Dr. Kumar',
-      status: 'scheduled',
-      attendance: { status: 'bunked' },
-    },
-  ],
-  Wednesday: [
-    {
-      id: '4',
-      time_slot: '02:00 PM - 03:30 PM',
-      subject: { name: 'Financial Risk Analysis' },
-      room: 'Lab 101',
-      professor: 'Dr. Patel',
-      status: 'scheduled',
-      attendance: { status: 'attended' },
-    },
-  ],
-  Thursday: [
-    {
-      id: '5',
-      time_slot: '09:00 AM - 10:30 AM',
-      subject: { name: 'Strategic Marketing' },
-      room: 'Room 205',
-      professor: 'Prof. Shah',
-      status: 'cancelled',
-      attendance: null,
-    },
-  ],
-  Friday: [
-    {
-      id: '6',
-      time_slot: '11:00 AM - 12:30 PM',
-      subject: { name: 'Financial Risk Analysis' },
-      room: 'Lab 101',
-      professor: 'Dr. Patel',
-      status: 'scheduled',
-      attendance: { status: 'attended' },
-    },
-  ],
-};
+async function getTimetableData(week: number) {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+    process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+  );
 
-export default function TimetablePage() {
-  const week = 1;
+  // Fetch timetable entries for the week
+  const { data: entries } = await supabase
+    .from('timetable_entries')
+    .select('*')
+    .eq('week', week)
+    .order('day_of_week', { ascending: true })
+    .order('session', { ascending: true });
+
+  // Group by day of week
+  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+  const classesByDay: { [key: string]: any[] } = {};
+
+  days.forEach(day => {
+    classesByDay[day] = (entries || []).filter(e => e.day_of_week === day);
+  });
+
+  return classesByDay;
+}
+
+export default async function TimetablePage({ searchParams }: { searchParams: { week?: string } }) {
+  const week = parseInt(searchParams.week || '1', 10);
+  const classesByDay = await getTimetableData(week);
 
   return (
     <div className="min-h-screen bg-background text-text-primary">
@@ -95,7 +55,7 @@ export default function TimetablePage() {
         {/* Classes by Day */}
         <div className="space-y-4">
           {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map((day) => {
-            const dayClasses = (mockClasses as any)[day];
+            const dayClasses = classesByDay[day];
 
             if (!dayClasses || dayClasses.length === 0) return null;
 
@@ -109,15 +69,13 @@ export default function TimetablePage() {
                       className={`rounded-lg border p-4 ${
                         entry.status === 'cancelled'
                           ? 'border-text-secondary border-opacity-20 bg-surface opacity-50 line-through'
-                          : entry.attendance?.status === 'bunked'
-                            ? 'border-danger border-opacity-30 bg-danger bg-opacity-5'
-                            : 'border-text-secondary border-opacity-20 bg-surface-raised'
+                          : 'border-text-secondary border-opacity-20 bg-surface-raised'
                       }`}
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <p className="font-bold">{entry.time_slot}</p>
-                          <p className="font-semibold">{entry.subject.name}</p>
+                          <p className="font-semibold">{entry.subject_id}</p>
                           <p className="text-sm text-text-secondary">
                             {entry.room} · {entry.professor}
                           </p>
@@ -125,10 +83,8 @@ export default function TimetablePage() {
                         <div className="text-right">
                           {entry.status === 'cancelled' ? (
                             <span className="text-xs text-text-secondary">⊘ Cancelled</span>
-                          ) : entry.attendance?.status === 'bunked' ? (
-                            <span className="text-xs text-danger">🚫 Bunked</span>
                           ) : (
-                            <span className="text-xs text-success">✓ Attended</span>
+                            <span className="text-xs text-success">✓ Scheduled</span>
                           )}
                         </div>
                       </div>
