@@ -7,214 +7,458 @@ export type Json =
   | Json[]
 
 export type Database = {
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
   public: {
     Tables: {
-      db_meta: {
+      users: {
         Row: {
-          applied_at: string
-          checksum: string
-          filename: string
-          name: string
-          version: string
+          id: string
+          email: string
+          created_at: string
         }
         Insert: {
-          applied_at?: string
-          checksum: string
-          filename: string
-          name: string
-          version: string
+          id?: string
+          email: string
+          created_at?: string
         }
         Update: {
-          applied_at?: string
-          checksum?: string
-          filename?: string
-          name?: string
-          version?: string
+          id?: string
+          email?: string
+          created_at?: string
         }
-        Relationships: []
+      }
+      subjects: {
+        Row: {
+          id: string
+          user_id: string
+          code: string
+          name: string
+          credits: number
+          professor: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          code: string
+          name: string
+          credits: number
+          professor: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          code?: string
+          name?: string
+          credits?: number
+          professor?: string
+          created_at?: string
+        }
+      }
+      timetable_entries: {
+        Row: {
+          id: string
+          user_id: string
+          subject_id: string
+          day_of_week: string
+          start_time: string
+          end_time: string
+          room: string
+          week_number: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          subject_id: string
+          day_of_week: string
+          start_time: string
+          end_time: string
+          room: string
+          week_number: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          subject_id?: string
+          day_of_week?: string
+          start_time?: string
+          end_time?: string
+          room?: string
+          week_number?: number
+          created_at?: string
+        }
+      }
+      attendance_logs: {
+        Row: {
+          id: string
+          user_id: string
+          timetable_entry_id: string
+          status: string
+          logged_at: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          timetable_entry_id: string
+          status: string
+          logged_at: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          timetable_entry_id?: string
+          status?: string
+          logged_at?: string
+          created_at?: string
+        }
+      }
+      work_items: {
+        Row: {
+          id: string
+          user_id: string
+          subject_id: string
+          title: string
+          type: string
+          status: string
+          priority: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          subject_id: string
+          title: string
+          type: string
+          status: string
+          priority: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          subject_id?: string
+          title?: string
+          type?: string
+          status?: string
+          priority?: number
+          created_at?: string
+        }
+      }
+      research_projects: {
+        Row: {
+          id: string
+          user_id: string
+          subject_id: string
+          title: string
+          project_type: string
+          status: string
+          progress_percent: number
+          target_completion_date: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          subject_id: string
+          title: string
+          project_type: string
+          status: string
+          progress_percent: number
+          target_completion_date?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          subject_id?: string
+          title?: string
+          project_type?: string
+          status?: string
+          progress_percent?: number
+          target_completion_date?: string | null
+          created_at?: string
+        }
+      }
+      nptel_courses: {
+        Row: {
+          id: string
+          user_id: string
+          subject_id: string
+          course_id: string
+          course_name: string
+          course_code: string | null
+          instructor: string | null
+          duration_weeks: number | null
+          total_lectures: number | null
+          lectures_completed: number
+          status: string
+          enrollment_date: string | null
+          target_completion_date: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          subject_id: string
+          course_id: string
+          course_name: string
+          course_code?: string | null
+          instructor?: string | null
+          duration_weeks?: number | null
+          total_lectures?: number | null
+          lectures_completed?: number
+          status?: string
+          enrollment_date?: string | null
+          target_completion_date?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          subject_id?: string
+          course_id?: string
+          course_name?: string
+          course_code?: string | null
+          instructor?: string | null
+          duration_weeks?: number | null
+          total_lectures?: number | null
+          lectures_completed?: number
+          status?: string
+          enrollment_date?: string | null
+          target_completion_date?: string | null
+          created_at?: string
+        }
+      }
+      nptel_assignments: {
+        Row: {
+          id: string
+          user_id: string
+          nptel_course_id: string
+          assignment_number: number | null
+          title: string
+          description: string | null
+          due_date: string | null
+          max_score: number
+          score_obtained: number | null
+          status: string
+          submission_date: string | null
+          feedback: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          nptel_course_id: string
+          assignment_number?: number | null
+          title: string
+          description?: string | null
+          due_date?: string | null
+          max_score?: number
+          score_obtained?: number | null
+          status?: string
+          submission_date?: string | null
+          feedback?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          nptel_course_id?: string
+          assignment_number?: number | null
+          title?: string
+          description?: string | null
+          due_date?: string | null
+          max_score?: number
+          score_obtained?: number | null
+          status?: string
+          submission_date?: string | null
+          feedback?: string | null
+          created_at?: string
+        }
+      }
+      nptel_certificates: {
+        Row: {
+          id: string
+          user_id: string
+          nptel_course_id: string
+          certificate_type: string
+          issue_date: string | null
+          certificate_url: string | null
+          score_percentage: number | null
+          status: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          nptel_course_id: string
+          certificate_type: string
+          issue_date?: string | null
+          certificate_url?: string | null
+          score_percentage?: number | null
+          status?: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          nptel_course_id?: string
+          certificate_type?: string
+          issue_date?: string | null
+          certificate_url?: string | null
+          score_percentage?: number | null
+          status?: string
+          created_at?: string
+        }
+      }
+      lecture_notes: {
+        Row: {
+          id: string
+          user_id: string
+          subject_id: string
+          title: string
+          content: string | null
+          comprehension_level: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          subject_id: string
+          title: string
+          content?: string | null
+          comprehension_level?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          subject_id?: string
+          title?: string
+          content?: string | null
+          comprehension_level?: number
+          created_at?: string
+        }
+      }
+      group_projects: {
+        Row: {
+          id: string
+          user_id: string
+          subject_id: string
+          project_name: string
+          group_members: number
+          status: string
+          progress_percent: number
+          target_completion_date: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          subject_id: string
+          project_name: string
+          group_members: number
+          status: string
+          progress_percent: number
+          target_completion_date?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          subject_id?: string
+          project_name?: string
+          group_members?: number
+          status?: string
+          progress_percent?: number
+          target_completion_date?: string | null
+          created_at?: string
+        }
+      }
+      artifacts: {
+        Row: {
+          id: string
+          user_id: string
+          subject_id: string
+          title: string
+          artifact_type: string
+          status: string
+          quality_score: number | null
+          revision_number: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          subject_id: string
+          title: string
+          artifact_type: string
+          status: string
+          quality_score?: number | null
+          revision_number?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          subject_id?: string
+          title?: string
+          artifact_type?: string
+          status?: string
+          quality_score?: number | null
+          revision_number?: number
+          created_at?: string
+        }
+      }
+      db_meta: {
+        Row: {
+          version: number | null
+          name: string
+          filename: string
+          sha256: string
+          applied_at: string
+        }
+        Insert: {
+          version?: number | null
+          name: string
+          filename: string
+          sha256: string
+          applied_at?: string
+        }
+        Update: {
+          version?: number | null
+          name?: string
+          filename?: string
+          sha256?: string
+          applied_at?: string
+        }
       }
       example_widget: {
         Row: {
-          created_at: string
           id: string
           name: string
         }
         Insert: {
-          created_at?: string
           id?: string
           name: string
         }
         Update: {
-          created_at?: string
           id?: string
           name?: string
         }
-        Relationships: []
       }
     }
-    Views: {
-      [_ in never]: never
-    }
+    Views: {}
     Functions: {
-      keepalive: { Args: never; Returns: string }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
-}
-
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
-
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
-
-export type Tables<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R
-    }
-    ? R
-    : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-        Row: infer R
+      keepalive: {
+        Args: {}
+        Returns: string
       }
-      ? R
-      : never
-    : never
-
-export type TablesInsert<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
     }
-    ? I
-    : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Insert: infer I
-      }
-      ? I
-      : never
-    : never
-
-export type TablesUpdate<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    Enums: {}
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
-    }
-    ? U
-    : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Update: infer U
-      }
-      ? U
-      : never
-    : never
-
-export type Enums<
-  DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
-    | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
-> = DefaultSchemaEnumNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-    : never
-
-export type CompositeTypes<
-  PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
-> = PublicCompositeTypeNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never
-
-export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
-  public: {
-    Enums: {},
-  },
-} as const
-
