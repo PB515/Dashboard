@@ -41,10 +41,10 @@ export async function POST(request: Request) {
       );
     }
 
-    // Get timetable entry + subject
+    // Get timetable entry
     const { data: entry, error: entryError } = await supabase
       .from('timetable_entries')
-      .select('id, subject_id, subjects(id, code, credits)')
+      .select('id, subject_id, day_of_week, start_time, end_time')
       .eq('id', timetable_entry_id)
       .eq('user_id', user.id)
       .single();
