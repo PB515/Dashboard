@@ -1,51 +1,38 @@
 import Link from 'next/link';
+import { createClient } from '@supabase/supabase-js';
 
-const mockSubjects = [
-  {
-    id: 'subj-fra',
-    code: 'FRA',
-    name: 'Financial Risk Analysis',
-    credits: 3,
-    tokens_remaining: 2,
-    tokens_max: 2,
-    attended_count: 8,
-    total_sessions: 10,
-    status: 'abundant',
-  },
-  {
-    id: 'subj-haw',
-    code: 'HAW',
-    name: 'Heritage and Wisdom',
-    credits: 1,
-    tokens_remaining: 1,
-    tokens_max: 1,
-    attended_count: 9,
-    total_sessions: 10,
-    status: 'caution',
-  },
-  {
-    id: 'subj-marketing',
-    code: 'MKT',
-    name: 'Strategic Marketing',
-    credits: 2,
-    tokens_remaining: 2,
-    tokens_max: 3,
-    attended_count: 8,
-    total_sessions: 10,
-    status: 'caution',
-  },
-  {
-    id: 'subj-quant',
-    code: 'QUANT',
-    name: 'Quantitative Methods',
-    credits: 2,
-    tokens_remaining: 0,
-    tokens_max: 3,
-    attended_count: 8,
-    total_sessions: 10,
-    status: 'danger',
-  },
-];
+async function getSubjectsData() {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+    process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+  );
+
+  const { data: subjects } = await supabase
+    .from('subjects')
+    .select('*')
+    .order('credits', { ascending: false });
+
+  return (subjects || []).map((subject: any) => {
+    const tokens_max = subject.max_bunks_allowed;
+    const tokens_remaining = tokens_max - (subject.bunks_used || 0);
+
+    let status = 'abundant';
+    if (tokens_remaining < 2) status = 'danger';
+    else if (tokens_remaining < 4) status = 'caution';
+
+    return {
+      id: subject.id,
+      code: subject.code,
+      name: subject.name,
+      credits: subject.credits,
+      professor: subject.professor,
+      tokens_remaining,
+      tokens_max,
+      status,
+      total_sessions: subject.total_sessions,
+    };
+  });
+}
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -60,7 +47,9 @@ const getStatusColor = (status: string) => {
   }
 };
 
-export default function SubjectsPage() {
+export default async function SubjectsPage() {
+  const subjects = await getSubjectsData();
+
   return (
     <div className="min-h-screen bg-background text-text-primary">
       {/* Header */}
@@ -70,9 +59,9 @@ export default function SubjectsPage() {
       </header>
 
       <main className="mx-auto max-w-4xl p-4">
-        {mockSubjects.length > 0 && (
+        {subjects.length > 0 && (
           <div className="space-y-4">
-            {mockSubjects.map((subject) => (
+            {subjects.map((subject: any) => (
               <div
                 key={subject.id}
                 className={`rounded-lg border p-6 ${getStatusColor(subject.status)}`}
