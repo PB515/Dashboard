@@ -81,10 +81,10 @@ export async function POST(request: Request) {
         );
       }
 
-      // Check if tokens available
+      // Check if subject exists
       const { data: subject } = await supabase
         .from('subjects')
-        .select('id, max_bunks_allowed, bunks_used')
+        .select('id, code, credits')
         .eq('id', entry.subject_id)
         .eq('user_id', user.id)
         .single();
@@ -100,30 +100,14 @@ export async function POST(request: Request) {
         );
       }
 
-      const tokensRemaining =
-        subject.max_bunks_allowed - subject.bunks_used;
-
-      if (tokensRemaining <= 0) {
-        return NextResponse.json(
-          {
-            error: 'BadRequest',
-            message: 'No tokens left for this subject',
-            status: 400,
-          },
-          { status: 400 }
-        );
-      }
-
       // Insert attendance log
       const { data: log, error: logError } = await supabase
         .from('attendance_logs')
         .insert({
           user_id: user.id,
           timetable_entry_id,
-          date,
           status: 'bunked',
-          auto_logged: false,
-          token_spent: true,
+          logged_at: date,
         })
         .select()
         .single();
@@ -132,35 +116,14 @@ export async function POST(request: Request) {
         throw logError;
       }
 
-      // Update subject bunks_used
-      const { error: updateError } = await supabase
-        .from('subjects')
-        .update({ bunks_used: subject.bunks_used + 1 })
-        .eq('id', entry.subject_id)
-        .eq('user_id', user.id);
-
-      if (updateError) {
-        throw updateError;
-      }
-
       const response: AttendanceOverrideResponse = {
         success: true,
         attendance: {
           id: log.id,
           user_id: user.id,
           timetable_entry_id,
-          date,
           status: 'bunked',
-          token_spent: true,
-          auto_logged: false,
           created_at: log.created_at,
-          updated_at: log.updated_at,
-        },
-        subject_tokens_updated: {
-          subject_code: (entry.subjects as any)?.code || '',
-          tokens_remaining:
-            subject.max_bunks_allowed - (subject.bunks_used + 1),
-          tokens_max: subject.max_bunks_allowed,
         },
       };
 
